@@ -13,3 +13,11 @@ let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
+
+// Twitter Bootstrap
+mix.copyDirectory('vendor/twbs/bootstrap/dist', 'public/twbs/bootstrap/dist');
+mix.copyDirectory('vendor/twbs/bootstrap/dist', 'public/twbs/bootstrap/dist');
+
+// Admin LTE
+mix.copyDirectory('vendor/almasaeed2010/adminlte/dist', 'public/adminlte/dist');
+mix.copyDirectory('vendor/almasaeed2010/adminlte/plugins', 'public/adminlte/plugins');
