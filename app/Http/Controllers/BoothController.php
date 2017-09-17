@@ -14,6 +14,12 @@ class BoothController extends Controller
       return view('booth.index', array('items' => $items));
     }
 
+    public function items($itemID)
+    {
+      $item = Item::find($itemID);
+      return view('booth.items.index', array('item' => $item));
+    }
+
     public function sellerItems($userID)
     {
       $seller = User::find($userID);

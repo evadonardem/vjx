@@ -2,37 +2,39 @@
 
 @section('title', 'SVJX Ukay-Ukay | Home')
 
-@section('content-header')
-<h1><i class="fa fa-home"></i> Home</h1>
-@endsection
-
 @section('content')
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="input-group">
+      <input type="text" class="form-control input-lg" placeholder="Keyword">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-info btn-flat btn-lg"><i class="fa fa-lg fa-search"></i></button>
+      </span>
+    </div>
+  </div>
+</div>
+<br>
 
 @if(count($items)>0)
 <div class="row">
   @foreach($items as $item)
-  <div class="col-md-6">
+  <div class="col-md-4 col-sm-6">
     <div class="box box-primary box-solid">
       <div class="box-header with-border">
-        <h3 class="box-title">Item #{{ $item->id }}</h3>
+        <h3 class="box-title">Item No. {{ $item->id }}</h3>
         <!-- /.box-tools -->
       </div>
       <!-- /.box-header -->
       <div class="box-body" style="display: block;">
         <div class="row">
-          <div class="col-md-5">
-            <p><img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="img-responsive img-thumbnail" width="100%"></p>
-            <div>
-              <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
-              <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
-            </div>
-          </div>
-          <div class="col-md-7">
-            <p class="text-right"><span class="lead">Php. {{ number_format($item->amount, 2) }} ({{ $item->unit }})</span><br>
+          <div class="col-md-12">
+            <p><img src="{{ asset('storage/'.$item->photos[ count($item->photos) > 0 ? rand(0, count($item->photos)-1) : 0 ]->thumbnail ) }}" class="img-responsive img-thumbnail" width="100%"></p>
+            <?php $pos = strpos($item->short_description, ' ', strlen($item->short_description) > 30 ? 30 : strlen($item->short_description)) ?>
+            <p>{{ substr($item->short_description, 0, (!$pos) ? strlen($item->short_description) : $pos) }}{{ (!$pos) ? null : '...' }}</p>
+            <a href="{{ action('BoothController@items', $item->id) }}" class="btn btn-block btn-primary">View Details</a>
+            <p class="text-right"><span class="lead">Php. {{ number_format($item->amount, 2) }} / {{ $item->unit->id }}</span><br>
               <a href="{{ action('BoothController@sellerItems', $item->user->id) }}"><small><i class="fa fa-user"></i> {{ $item->user->name }}</small></a></p>
-            <div style="border: 1px dotted silver; overflow: auto; height: 150px; padding: 6px;">
-              {!! html_entity_decode($item->description) !!}
-            </div>
           </div>
         </div>
       </div>
@@ -42,6 +44,8 @@
   </div>
   @endforeach
 </div>
+@else
+<p>No items yet posted online.</p>
 @endif
 
 @endsection

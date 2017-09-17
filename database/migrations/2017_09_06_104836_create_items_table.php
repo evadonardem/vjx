@@ -16,11 +16,10 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
-            $table->text('thumbnail_path');
-            $table->text('image_path');
-            $table->text('description');
+            $table->string('short_description', 100);
+            $table->string('description', 1000);
             $table->decimal('amount', 10, 2);
-            $table->string('unit');
+            $table->char('unit_id', 10);
             $table->datetime('sold_at')->nullable();
             $table->timestamps();
 
@@ -28,6 +27,11 @@ class CreateItemsTable extends Migration
               ->references('id')->on('users')
               ->onDelete('cascade')
               ->onUpdate('cascade');
+
+            $table->foreign('unit_id')
+                ->references('id')->on('units')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

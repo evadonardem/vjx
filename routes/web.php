@@ -30,6 +30,7 @@ Route::get('dashboard', 'DashboardController@index');
 // Booth
 Route::get('/', 'BoothController@index');
 Route::get('booth', 'BoothController@index');
+Route::get('booth/items/{itemID}', 'BoothController@items');
 Route::get('booth/sellers/{userID}/items', 'BoothController@sellerItems');
 
 

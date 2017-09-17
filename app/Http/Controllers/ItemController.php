@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Unit;
 use App\Item;
+use App\Photo;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +15,9 @@ use Auth;
 
 class ItemController extends Controller
 {
+    private $thumbnailSize = [175, 175];
+    private $photoSize = [640, 480];
+
     /**
      * Create a new controller instance.
      *
@@ -41,7 +46,8 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return view('items.create');
+        $units = Unit::all();
+        return view('items.create', [ 'units' => $units ]);
     }
 
     /**
@@ -52,46 +58,19 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-
-      if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        $file = $request->file('photo');
-      }
-
-      if(!isset($file) || empty($file)) return redirect(action('ItemController@index'));
-
-      $thumbnailPath = 'images/';
-      $thumbnailFilename = uniqid() . '-' . time() . '-' . Auth::user()->id . '-200X200.jpg';
-      $thumbnailPath .= $thumbnailFilename;
-
-      $thumbnail = Image::make($request->photo->path())->fit(200);
-      $thumbnail->text('SVJX Ukay-Ukay', 100, 100, function($font) {
-        $font->file(storage_path('app/public/fonts/Capture_it.ttf'));
-        $font->size(24);
-        $font->color(array(255, 255, 255, 0.2));
-        $font->align('center');
-        $font->valign('middle');
-        $font->angle(rand(0, 90) * (rand(0, 1) ? 1 : -1));
-      });
-      $thumbnail->save(storage_path('app/public/'.$thumbnailPath));
-
-      $imagePath = 'images/';
-      $imageFilename = uniqid() . '-' . time() . '-' . Auth::user()->id . '-800X600.jpg';
-      $imagePath .= $imageFilename;
-
-      $image = Image::make($request->photo->path())->fit(800, 600);
-      $image->text('SVJX Ukay-Ukay', 400, 300, function($font) {
-        $font->file(storage_path('app/public/fonts/Capture_it.ttf'));
-        $font->size(100);
-        $font->color(array(255, 255, 255, 0.2));
-        $font->align('center');
-        $font->valign('middle');
-        $font->angle(rand(0, 90) * (rand(0, 1) ? 1 : -1));
-      });
-      $image->save(storage_path('app/public/'.$imagePath));
-
       $request->merge(['description' => e($request->input('description'))]);
 
-      Auth::user()->items()->create(array_merge($request->all(), ['thumbnail_path' => $thumbnailPath, 'image_path' => $imagePath]));
+      $item = Auth::user()->items()->create($request->all());
+
+      if($request->hasFile('photo')) {
+        foreach ($request->file('photo') as $p) {
+          if($p->isValid())
+          {
+            $this->preparePhoto($item, $p);
+          }
+        }
+      }
+
       return redirect(action('ItemController@index'));
     }
 
@@ -114,7 +93,8 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        return $item;
+        $units = Unit::all();
+        return view('items.edit', ['item' => $item, 'units' => $units]);
     }
 
     /**
@@ -126,7 +106,29 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+      $request->merge(['description' => e($request->input('description'))]);
+      $item->update($request->all());
+
+      if($request->hasFile('photo')) {
+        foreach ($request->file('photo') as $p) {
+          if($p->isValid())
+          {
+            $this->preparePhoto($item, $p);
+          }
+        }
+      }
+
+      if($request->has('delete_photo'))
+      {
+        foreach($request->delete_photo as $photoID)
+        {
+          $p = Photo::find($photoID);
+          Storage::delete([$p->thumbnail, $p->photo]);
+          $p->delete();
+        }
+      }
+
+      return redirect(action('ItemController@index'));
     }
 
     /**
@@ -137,14 +139,46 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-      Storage::delete([$item->thumbnail_path, $item->image_path]);
+      foreach ($item->photos as $p) {
+        Storage::delete([$p->thumbnail, $p->photo]);
+      }
       $item->delete();
       return $item;
     }
 
-    public function test()
+    private function preparePhoto(Item $item, $p)
     {
-      return Auth::user()->items;
+      $thumbnailPath = 'images/';
+      $thumbnailFilename = $item->id . '-' . uniqid() . '-' . time() . '-' . implode('X', $this->thumbnailSize) . '.jpg';
+      $thumbnailPath .= $thumbnailFilename;
+
+      $thumbnail = Image::make($p->path())->fit($this->thumbnailSize[0], $this->thumbnailSize[1]);
+      $thumbnail->text('SVJX Ukay-Ukay', $this->thumbnailSize[0]/2, $this->thumbnailSize[1]/2, function($font) {
+        $font->file(storage_path('app/public/fonts/Capture_it.ttf'));
+        $font->size(24);
+        $font->color(array(255, 255, 255, 0.2));
+        $font->align('center');
+        $font->valign('middle');
+        $font->angle(rand(0, 90) * (rand(0, 1) ? 1 : -1));
+      });
+      $thumbnail->save(storage_path('app/public/'.$thumbnailPath));
+
+      $photoPath = 'images/';
+      $photoFilename = $item->id . '-' . uniqid() . '-' . time() . '-' . implode('X', $this->photoSize) . '.jpg';
+      $photoPath .= $photoFilename;
+
+      $photo = Image::make($p->path())->fit($this->photoSize[0], $this->photoSize[1]);
+      $photo->text('SVJX Ukay-Ukay', $this->photoSize[0]/2, $this->photoSize[1]/2, function($font) {
+        $font->file(storage_path('app/public/fonts/Capture_it.ttf'));
+        $font->size(100);
+        $font->color(array(255, 255, 255, 0.2));
+        $font->align('center');
+        $font->valign('middle');
+        $font->angle(rand(0, 90) * (rand(0, 1) ? 1 : -1));
+      });
+      $photo->save(storage_path('app/public/'.$photoPath));
+
+      $item->photos()->create(['thumbnail' => $thumbnailPath, 'photo' => $photoPath]);
     }
 
 }

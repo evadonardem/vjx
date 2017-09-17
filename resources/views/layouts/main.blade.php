@@ -9,7 +9,7 @@
     <script type="text/javascript" src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ asset('twbs/bootstrap/dist/css/bootstrap.min.css') }}">
-    <script type="text/javascript" src="{{ asset('twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>    
 
     <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
 
@@ -20,6 +20,15 @@
     <title>@yield('title')</title>
   </head>
   <body class="skin-purple sidebar-mini">
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
 
     <div class="wrapper">
 
@@ -268,6 +277,21 @@
                 <h4 class="page-header">Bulletin</h4>
 
                 <div class="row">
+                  <div class="col-md-12">
+                    <div class="fb-like"
+                      data-href="{{ url('/') }}"
+                      data-layout="standard"
+                      data-action="like"
+                      data-size="large"
+                      data-show-faces="true"
+                      data-share="true"></div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="fb-comments" data-href="{{ url('/') }}" data-width="100%" data-numposts="5"></div>
+                  </div>
+                </div>
+
+                <div class="row">
                   @for($i=0; $i<3; $i++)
                   <div class="col-md-12">
                     <!-- small box -->
@@ -316,7 +340,35 @@
       <footer class="main-footer">
 
         <!-- Location -->
-        <h2 id="location" class="page-header"><i class="fa fa-map-marker"></i> Location</h2>
+        <div class="row">
+          <div class="col-md-12">
+            <h2 id="location" class="page-header"><i class="fa fa-map-marker"></i> Location</h2>
+            <address class="">
+              <strong>Mix-Mix Klozet</strong><br>
+              Rooftop Maharlika Livehood Center <br>
+              Magsaysay Avenue, Baguio City, 2600, Benguet, Philippines
+            </address>
+            <div id="map" style="width: 100%; height: 400px;"></div>
+            <script>
+            function myMap() {
+                var uluru = { lat: 16.414163, lng: 120.594745 };
+                var map = new google.maps.Map(document.getElementById("map"), {
+                  zoom: 17,
+                  center: uluru
+                });
+                var marker = new google.maps.Marker({
+                  animation: google.maps.Animation.BOUNCE,
+                  title: 'Mix-Mix Klozet',
+                  position: uluru,
+                  map: map
+                });
+            }
+            </script>
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEF1WilHPgTZHFk_3iSz5qpDCmXuq7XAI&callback=myMap"></script>
+          </div>
+        </div>
+
+
 
         <!-- To the right -->
         <div class="pull-right hidden-xs">
@@ -426,6 +478,7 @@
         });
       });
     </script>
+
     @yield('scripts')
 
   </body>
