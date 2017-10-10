@@ -21,7 +21,7 @@
           @foreach($item->photos as $p)
           <div class="photo-wrapper col-md-3 col-sm-4">
             <div class="well well-sm">
-              <img src="{{ asset('storage/'.$p->thumbnail) }}" class="img-responsive img-thumbnail" width="100%">
+              <img src="{{ asset($p->thumbnail) }}" class="img-responsive img-thumbnail" width="100%">
               <button id="photo{{ $p->id }}" type="button" class="photo-delete btn btn-block btn-flat"><i class="fa fa-trash"></i> Delete Photo</button>
             </div>
           </div>
