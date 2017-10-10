@@ -29,7 +29,7 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-md-12">
-            <p><img src="{{ asset('storage/'.$item->photos[ count($item->photos) > 0 ? rand(0, count($item->photos)-1) : 0 ]->thumbnail ) }}" class="img-responsive img-thumbnail" width="100%"></p>
+            <p><img src="{{ asset($item->photos[ count($item->photos) > 0 ? rand(0, count($item->photos)-1) : 0 ]->thumbnail ) }}" class="img-responsive img-thumbnail" width="100%"></p>
             <?php $pos = strpos($item->short_description, ' ', strlen($item->short_description) > 30 ? 30 : strlen($item->short_description)) ?>
             <p>{{ substr($item->short_description, 0, (!$pos) ? strlen($item->short_description) : $pos) }}{{ (!$pos) ? null : '...' }}</p>
             <a href="{{ action('BoothController@items', $item->id) }}" class="btn btn-block btn-primary">View Details</a>

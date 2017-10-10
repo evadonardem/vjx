@@ -37,7 +37,7 @@
               <div class="carousel-inner">
                 @foreach($item->photos as $key => $p)
                 <div class="{{ $key==0 ? 'active' : null }} item">
-                  <img src="{{ asset('storage/'.$p->photo) }}" class="img-responsive img-thumbnail" width="100%">
+                  <img src="{{ asset($p->photo) }}" class="img-responsive img-thumbnail" width="100%">
                 </div>
                 @endforeach
               </div>

@@ -70,7 +70,7 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-md-12">
-            <p><img src="{{ asset('storage/'.$item->thumbnail_path) }}" class="img-responsive img-thumbnail" width="100%"></p>
+            <p><img src="{{ asset($item->thumbnail_path) }}" class="img-responsive img-thumbnail" width="100%"></p>
             <a href="{{ action('BoothController@items', $item->id) }}" class="btn btn-block btn-primary">View Details</a>
             <p class="text-right"><span class="lead">Php. {{ number_format($item->amount, 2) }} ({{ $item->unit }})</span><br>
               <a href="{{ action('BoothController@sellerItems', $item->user->id) }}"><small><i class="fa fa-user"></i> {{ $item->user->name }}</small></a></p>
