@@ -21,7 +21,7 @@
         <h5 class="widget-user-desc">Seller ID: {{ $seller->id }}</h5>
       </div>
       <div class="widget-user-image">
-        <img class="img-circle" src="{{ asset('storage/images/photo_placeholder.jpg') }}" alt="User Avatar">
+        <img class="img-circle" src="{{ asset('images/photo_placeholder.jpg') }}" alt="User Avatar">
       </div>
       <div class="box-footer">
         <div class="row">
@@ -70,9 +70,11 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-md-12">
-            <p><img src="{{ asset($item->thumbnail_path) }}" class="img-responsive img-thumbnail" width="100%"></p>
+            <p>{{ asset($item->photos[ count($item->photos) > 0 ? rand(0, count($item->photos)-1) : 0 ]->thumbnail ) }}" class="img-responsive img-thumbnail" width="100%"></p>
+            <?php $pos = strpos($item->short_description, ' ', strlen($item->short_description) > 30 ? 30 : strlen($item->short_description)) ?>
+            <p>{{ substr($item->short_description, 0, (!$pos) ? strlen($item->short_description) : $pos) }}{{ (!$pos) ? null : '...' }}</p>
             <a href="{{ action('BoothController@items', $item->id) }}" class="btn btn-block btn-primary">View Details</a>
-            <p class="text-right"><span class="lead">Php. {{ number_format($item->amount, 2) }} ({{ $item->unit }})</span><br>
+            <p class="text-right"><span class="lead">Php. {{ number_format($item->amount, 2) }} / {{ $item->unit->id }}</span><br>
               <a href="{{ action('BoothController@sellerItems', $item->user->id) }}"><small><i class="fa fa-user"></i> {{ $item->user->name }}</small></a></p>
           </div>
         </div>
