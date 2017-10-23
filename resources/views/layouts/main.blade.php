@@ -9,7 +9,7 @@
     <script type="text/javascript" src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ asset('twbs/bootstrap/dist/css/bootstrap.min.css') }}">
-    <script type="text/javascript" src="{{ asset('twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>    
+    <script type="text/javascript" src="{{ asset('twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
 
@@ -53,101 +53,6 @@
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
               @if(Auth::user())
-                <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
-                  <!-- Menu toggle button -->
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-envelope-o"></i>
-                    <span class="label label-success">4</span>
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li class="header">You have 4 messages</li>
-                    <li>
-                      <!-- inner menu: contains the messages -->
-                      <ul class="menu">
-                        <li><!-- start message -->
-                          <a href="#">
-                            <div class="pull-left">
-                              <!-- User Image -->
-                              <img src="###" class="img-circle">
-                            </div>
-                            <!-- Message title and timestamp -->
-                            <h4>
-                              Support Team
-                              <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                            </h4>
-                            <!-- The message -->
-                            <p>Why not buy a new awesome theme?</p>
-                          </a>
-                        </li>
-                        <!-- end message -->
-                      </ul>
-                      <!-- /.menu -->
-                    </li>
-                    <li class="footer"><a href="#">See All Messages</a></li>
-                  </ul>
-                </li>
-                <!-- /.messages-menu -->
-
-                <!-- Notifications Menu -->
-                <li class="dropdown notifications-menu">
-                  <!-- Menu toggle button -->
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-bell-o"></i>
-                    <span class="label label-warning">10</span>
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li class="header">You have 10 notifications</li>
-                    <li>
-                      <!-- Inner Menu: contains the notifications -->
-                      <ul class="menu">
-                        <li><!-- start notification -->
-                          <a href="#">
-                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                          </a>
-                        </li>
-                        <!-- end notification -->
-                      </ul>
-                    </li>
-                    <li class="footer"><a href="#">View all</a></li>
-                  </ul>
-                </li>
-                <!-- Tasks Menu -->
-                <li class="dropdown tasks-menu">
-                  <!-- Menu Toggle Button -->
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-flag-o"></i>
-                    <span class="label label-danger">9</span>
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li class="header">You have 9 tasks</li>
-                    <li>
-                      <!-- Inner menu: contains the tasks -->
-                      <ul class="menu">
-                        <li><!-- Task item -->
-                          <a href="#">
-                            <!-- Task title and progress text -->
-                            <h3>
-                              Design some buttons
-                              <small class="pull-right">20%</small>
-                            </h3>
-                            <!-- The progress bar -->
-                            <div class="progress xs">
-                              <!-- Change the css width attribute to simulate progress -->
-                              <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                <span class="sr-only">20% Complete</span>
-                              </div>
-                            </div>
-                          </a>
-                        </li>
-                        <!-- end task item -->
-                      </ul>
-                    </li>
-                    <li class="footer">
-                      <a href="#">View all tasks</a>
-                    </li>
-                  </ul>
-                </li>
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                   <!-- Menu Toggle Button -->
@@ -185,7 +90,7 @@
                     <!-- Menu Footer-->
                     <li class="user-footer">
                       <div class="pull-left">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                        <a href="{{ action('ProfileController@show', Auth::user()->id) }}" class="btn btn-default btn-flat">Profile</a>
                       </div>
                       <div class="pull-right">
                         <a href="{{ route('logout') }}" class="btn btn-default btn-flat" onclick="event.preventDefault();
@@ -198,9 +103,9 @@
                   </ul>
                 </li>
                 <!-- Control Sidebar Toggle Button -->
-                <li>
+                <!-- <li>
                   <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                </li>
+                </li> -->
               @else
                 <li><a href="{{ route('login') }}"><i class="fa fa-sign-in"></i> <span>Login</span></a></li>
               @endif
@@ -245,6 +150,11 @@
             <!-- Optionally, you can add icons to the links -->
             <li class="{{ Request::is('dashboard') ? 'active' : null }}"><a href="{{ action('DashboardController@index') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
             <li class="{{ Request::is('items*') ? 'active' : null }}"><a href="{{ action('ItemController@index') }}"><i class="fa fa-list"></i> <span>My Items</span></a></li>
+            <li class="{{ Request::is('profiles*') ? 'active' : null }}">
+              <a href="{{ action('ProfileController@show', Auth::user()->id) }}">
+                <i class="fa fa-user"></i> <span>My Profile</span>
+              </a>
+            </li>
             <li>
               <a href="{{ route('logout') }}" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> <span>Logout</span></a>
@@ -289,27 +199,6 @@
                   <div class="col-md-12">
                     <div class="fb-comments" data-href="{{ url('/') }}" data-width="100%" data-numposts="5"></div>
                   </div>
-                </div>
-
-                <div class="row">
-                  @for($i=0; $i<3; $i++)
-                  <div class="col-md-12">
-                    <!-- small box -->
-                    <div class="small-box bg-aqua">
-                      <div class="inner">
-                        <h3>Clearance Sale</h3>
-
-                        <p>Thursday, August 21, 2017</p>
-                      </div>
-                      <div class="icon">
-                        <i class="fa fa-calendar"></i>
-                      </div>
-                      <a href="#" class="small-box-footer">
-                        More info <i class="fa fa-arrow-circle-right"></i>
-                      </a>
-                    </div>
-                  </div>
-                  @endfor
                 </div>
 
                 <div class="info-box">

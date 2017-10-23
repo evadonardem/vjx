@@ -11,14 +11,18 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/test', function() {
   $users = App\User::all();
   foreach ($users as $user) {
     $user->api_token = str_random(60);
+    $user->save();
+  }
+});
+
+Route::get('/activate/{email}', function($email) {
+  $user = App\User::where('email', '=', $email)->first();
+  if(is_object($user)) {
+    $user->active = true;
     $user->save();
   }
 });
@@ -37,3 +41,7 @@ Route::get('booth/sellers/{userID}/items', 'BoothController@sellerItems');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Profile
+Route::resource('profiles', 'ProfileController');
+Route::post('changepassword', 'ProfileController@changePassword');

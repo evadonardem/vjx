@@ -15,6 +15,15 @@
 @endsection
 
 @section('content')
+
+@if(count($errors)>0)
+  <div class="alert alert-danger">
+    @foreach($errors->all() as $error)
+      <p>{{ $error }}</p>
+    @endforeach
+  </div>
+@endif
+
 <div class="box box-default">
   <div class="box-header with-border">
     <h3 class="box-title">New Item</h3>
@@ -34,19 +43,19 @@
 
       <div class="form-group">
         <label for="">Short Description:</label>
-        <input type="text" name="short_description" value="" class="form-control" maxlength="100">
+        <input type="text" name="short_description" value="{{ old('short_description') }}" class="form-control" maxlength="100">
       </div>
 
       <div class="form-group">
         <label for="">Description:</label>
-        <textarea name="description" rows="8" cols="80" class="form-control" maxlength="1000"></textarea>
+        <textarea name="description" rows="8" cols="80" class="form-control" maxlength="1000">{{ old('description') }}</textarea>
       </div>
 
       <div class="form-group">
         <label for="">Amount:</label>
         <div class="row">
           <div class="col-md-8">
-            <input type="text" name="amount" value="" class="form-control">
+            <input type="text" name="amount" value="{{ old('amount') }}" class="form-control">
           </div>
           <div class="col-md-4">
             <select name="unit_id" class="form-control">

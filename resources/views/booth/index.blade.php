@@ -19,7 +19,7 @@
 @if(count($items)>0)
 <div class="row">
   @foreach($items as $item)
-  <div class="col-md-4 col-sm-6">
+  <div class="col-md-4 col-sm-4">
     <div class="box box-primary box-solid">
       <div class="box-header with-border">
         <h3 class="box-title">Item No. {{ $item->id }}</h3>

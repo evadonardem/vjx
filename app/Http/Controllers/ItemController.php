@@ -58,6 +58,17 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
+
+      /**
+      * form validaton
+      */
+      $this->validate($request, [
+        'photo' => 'required',
+        'short_description' => 'required',
+        'description' => 'required',
+        'amount' => 'required|numeric'
+      ]);
+
       $request->merge(['description' => e($request->input('description'))]);
 
       $item = Auth::user()->items()->create($request->all());

@@ -1,5 +1,7 @@
 @extends('layouts.register')
 
+@section('title', 'Register New Membership')
+
 @section('content')
 <div class="register-box">
   <div class="register-logo">
@@ -11,7 +13,7 @@
 
     <form action="{{ route('register') }}" method="post">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Full name" name="name">
+        <input type="text" class="form-control" placeholder="Full name" name="name" value="{{ old('name') }}">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
@@ -57,15 +59,6 @@
         </div>
       </div>
     </form>
-
-    <div class="social-auth-links text-center">
-      <p>- OR -</p>
-      <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign up using
-        Facebook</a>
-      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign up using
-        Google+</a>
-    </div>
-
     <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
   </div>
   <!-- /.form-box -->
